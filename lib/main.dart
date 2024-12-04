@@ -80,7 +80,7 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
 
     setState(() {
       _timezones = tz.timeZoneDatabase.locations.keys.toList();
-      _filteredTimezones = _timezones; // Initialize filtered list
+      _filteredTimezones = _timezones;
     });
   }
 
