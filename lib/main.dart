@@ -5,7 +5,7 @@ import 'package:timezone/standalone.dart' as tz;
 import 'package:intl/intl.dart';
 
 void main() {
-  tz.initializeTimeZones(); // Initialize timezone data
+  tz.initializeTimeZones();
   runApp(TimezoneConverterApp());
 }
 
@@ -15,7 +15,7 @@ class TimezoneConverterApp extends StatelessWidget {
     return MaterialApp(
       title: 'TimeSync',
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFF010817), // Set background color
+        scaffoldBackgroundColor: Color(0xFF010817),
         primaryColor: Color(0xFF010817),
       ),
       home: TimezoneConverterScreen(),
@@ -37,21 +37,21 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
   List<String> _filteredTimezones = [];
   TextEditingController _searchController = TextEditingController();
   List<Map<String, String>> _selectedTimezonesList = [];
-  Map<String, Timer> _timezoneTimers = {}; // To store timers for each timezone
+  Map<String, Timer> _timezoneTimers = {};
 
   @override
   void initState() {
     super.initState();
-    _initializeTimezones(); // Fetch all timezones
-    _updateLocalTime(); // Set initial time
-    _startClock(); // Start the clock
+    _initializeTimezones();
+    _updateLocalTime();
+    _startClock();
   }
 
   @override
   void dispose() {
-    _timer.cancel(); // Stop the global timer
+    _timer.cancel();
     _timezoneTimers.values.forEach((timer) =>
-        timer.cancel()); // Cancel individual timers
+        timer.cancel());
     _searchController.dispose();
     super.dispose();
   }
@@ -66,18 +66,18 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
     final now = DateTime.now();
     setState(() {
       _localTime = DateFormat('hh:mm a').format(
-          now); // Format time as 12-hour with AM/PM
+          now);
     });
 
-    // Only update converted time for the selected timezones
+
     _selectedTimezonesList.forEach((timezone) {
       _convertTime(
-          timezone['timezone']!); // Update the converted time dynamically
+          timezone['timezone']!);
     });
   }
 
   Future<void> _initializeTimezones() async {
-    // Fetch all available timezones
+
     setState(() {
       _timezones = tz.timeZoneDatabase.locations.keys.toList();
       _filteredTimezones = _timezones; // Initialize filtered list
@@ -90,24 +90,24 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
       final targetLocation = tz.getLocation(targetTimezone);
       final convertedTime = tz.TZDateTime.from(now, targetLocation);
 
-      // Check if the timezone is already in the list, if not, add it
+
       if (!_selectedTimezonesList.any((timezone) =>
       timezone['timezone'] == targetTimezone)) {
         setState(() {
           _selectedTimezonesList.add({
             'timezone': targetTimezone,
             'time': DateFormat('hh:mm a').format(convertedTime),
-            // Format time as 12-hour with AM/PM
+
           });
         });
 
-        // Start a new timer for the new timezone
+
         _timezoneTimers[targetTimezone] =
             Timer.periodic(Duration(seconds: 1), (timer) {
               _convertTime(targetTimezone);
             });
       } else {
-        // If the timezone is already in the list, just update its time
+
         setState(() {
           for (var timezone in _selectedTimezonesList) {
             if (timezone['timezone'] == targetTimezone) {
@@ -128,13 +128,13 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
 
   void _removeTimezone(String timezone) {
     setState(() {
-      // Remove the timezone from the list
+
       _selectedTimezonesList.removeWhere((timezoneMap) =>
       timezoneMap['timezone'] == timezone);
 
-      // Cancel the timer associated with this timezone
+
       _timezoneTimers[timezone]?.cancel();
-      _timezoneTimers.remove(timezone); // Remove from the map of active timers
+      _timezoneTimers.remove(timezone);
     });
   }
 
@@ -160,18 +160,18 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
                   .of(context)
                   .size
                   .height * 0.75,
-              color: Color(0xFF010817), // Dropdown background color
+              color: Color(0xFF010817),
               child: Column(
                 children: [
                   TextField(
                     controller: _searchController,
                     onChanged: _filterTimezones,
-                    style: TextStyle(color: Colors.white), // Set the input text color to white
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: 'Search Timezones',
                       prefixIcon: Icon(Icons.search, color: Colors.white),
                       border: OutlineInputBorder(),
-                      hintStyle: TextStyle(color: Colors.white), // Set hint text color to white
+                      hintStyle: TextStyle(color: Colors.white),
                     ),
                   ),
 
@@ -212,10 +212,10 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
         backgroundColor: Color(0xFF010817),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          // Center content horizontally
+
           children: [
             Image.asset(
-              'assets/logo.png', // Replace with the path to your logo image
+              'assets/logo.png',
               height: 30,
             ),
             SizedBox(width: 10),
@@ -235,14 +235,14 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          // Keep top alignment
+
           crossAxisAlignment: CrossAxisAlignment.center,
-          // Center content horizontally
+
           children: [
-            // Left-aligned Local Time Display
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // Space between the items
+
               children: [
                 Text(
                   'Local Time',
@@ -264,12 +264,12 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
             ),
             SizedBox(height: 16),
 
-            // Centered Add Button for Timezone Selection (White Button with text color #010817)
+
             Center(
               child: ElevatedButton(
                 onPressed: _showTimezonePicker,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white, // White background color
+                  backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -278,13 +278,13 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
                 child: Text(
                   'Add Timezone',
                   style: TextStyle(
-                      color: Color(0xFF010817)), // Text color #010817
+                      color: Color(0xFF010817)),
                 ),
               ),
             ),
             SizedBox(height: 16),
 
-            // Display List of Timezones and their Corresponding Times
+
             Expanded(
               child: ListView.builder(
                 itemCount: _selectedTimezonesList.length,
@@ -312,13 +312,13 @@ class _TimezoneConverterScreenState extends State<TimezoneConverterScreen> {
                             _removeTimezone(_selectedTimezonesList[index]['timezone']!);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF010817), // Use your preferred background color
+                            backgroundColor: Color(0xFF010817),
                             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                           ),
                           child: Image.asset(
-                            'assets/removeicon.png', // Replace with the path to your image
-                            height: 24, // Set the height of the image
-                            width: 24, // Set the width of the image
+                            'assets/removeicon.png',
+                            height: 24,
+                            width: 24,
                           ),
                         ),
 
